@@ -58,7 +58,7 @@ class _ScreenInfoGroupState extends State<ScreenInfoGroup> {
                       _title = userGroup.name;
                     });
                     ScaffoldMessenger.of(context) .showSnackBar( const SnackBar(content: Text('Group Info Updated')));
-                  }, child: Text("Save")),
+                  }, child: Text("Submit")),
                 )
               ],
             ),

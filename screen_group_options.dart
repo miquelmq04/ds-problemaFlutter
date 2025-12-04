@@ -4,12 +4,13 @@ import 'package:problema/screen_list_users.dart';
 import 'data.dart';
 import 'screen_actions_group.dart';
 import 'screen_info_group.dart';
+import 'screen_schedule_group.dart';
 
 
 class GroupOptionWidget extends StatelessWidget {
   late String title;
   late IconData icon ;
-  late Widget page;
+  final Widget? page;
   final VoidCallback? onReturn;
 
   GroupOptionWidget({super.key,required this.title, required this.icon, required this.page,
@@ -40,10 +41,12 @@ class GroupOptionWidget extends StatelessWidget {
   }
 
   void selectOption(BuildContext context) {
-      Navigator.of(context).push(MaterialPageRoute<void>(
-          builder: (context) => this.page)).then((_) {
-        onReturn?.call();
-      });
+    if (this.page == null)
+      return;
+    Navigator.of(context).push(MaterialPageRoute<void>(
+        builder: (context) => this.page!)).then((_) {
+      onReturn?.call();
+    });
   }
 }
 
@@ -87,9 +90,9 @@ class _ScreenGroupOptionsState extends State<ScreenGroupOptions> {
             crossAxisCount: 2,
             children: <Widget>[
               GroupOptionWidget(title: 'Info', icon: Icons.description, page: ScreenInfoGroup(userGroup: userGroup),onReturn: _onReturnFromPage,),
-              GroupOptionWidget(title: 'Schedule', icon: Icons.calendar_month, page: ScreenListUsers(userGroup: userGroup),onReturn: _onReturnFromPage),
+              GroupOptionWidget(title: 'Schedule', icon: Icons.calendar_month, page: ScreenScheduleGroup(userGroup: userGroup),onReturn: _onReturnFromPage),
               GroupOptionWidget(title: 'Actions', icon: Icons.sensor_door, page: ScreenActionsGroup(userGroup: userGroup),onReturn: _onReturnFromPage),
-              GroupOptionWidget(title: 'Places', icon: Icons.home_work, page: ScreenListUsers(userGroup: userGroup),onReturn: _onReturnFromPage),
+              GroupOptionWidget(title: 'Places', icon: Icons.home_work, page: null,onReturn: _onReturnFromPage),
               GroupOptionWidget(title: 'Users', icon: Icons.manage_accounts, page: ScreenListUsers(userGroup: userGroup),onReturn: _onReturnFromPage),
             ],
           ),
