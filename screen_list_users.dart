@@ -52,9 +52,15 @@ class _ScreenListUsersState extends State<ScreenListUsers> {
   }
 
   Widget _buildRow(User user, int index) {
+    final imagePath = Data.images[user.name.toLowerCase()];
+    final imageDefault = Data.images['new user'];
     return ListTile(
+        leading: CircleAvatar(
+          backgroundImage: imagePath != null ? AssetImage(imagePath) : AssetImage(imageDefault!),
+          radius: 20,
+        ),
       title: Text(user.name),
-      trailing: Text('${user.credential}'),
+      trailing: Text(user.credential),
       onTap: () {},
     );
   }
