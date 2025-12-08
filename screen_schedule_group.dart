@@ -42,7 +42,7 @@ class _ScreenScheduleGroupState extends State<ScreenScheduleGroup> {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: now,
-      firstDate: DateTime(now.year),
+      firstDate: DateTime(now.year-5),
       lastDate: DateTime(now.year+5),
     );
 
