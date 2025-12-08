@@ -7,10 +7,11 @@ class InputDecorationTextFormField extends StatelessWidget {
   late String initialValue;
   late TextEditingController controller;
   late int minLines;
+  final String? Function(String?)? validator;
 
   InputDecorationTextFormField({super.key,required this.name,
     required this.exampleInput, required this.controller,this.minLines=1,
-    this.initialValue=''})
+    this.initialValue='', this.validator})
   {
     controller.text = initialValue;
   }
@@ -19,14 +20,15 @@ class InputDecorationTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       maxLines: null,
-      minLines: this.minLines,
+      minLines: minLines,
       decoration: InputDecoration(
-        labelText: this.name,
+        labelText: name,
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        hintText: this.exampleInput,
+        hintText: exampleInput,
         border: OutlineInputBorder(),
       ),
-      controller: this.controller,
+      controller: controller,
+      validator: validator,
     );
   }
 }
