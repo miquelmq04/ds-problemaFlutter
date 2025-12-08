@@ -23,7 +23,7 @@ class _ScreenInfoGroupState extends State<ScreenInfoGroup> {
   void initState() {
     super.initState();
     userGroup = widget.userGroup;
-    _title = this.userGroup!.name;
+    _title = userGroup.name;
   }
   @override
   void dispose() {
@@ -55,7 +55,7 @@ class _ScreenInfoGroupState extends State<ScreenInfoGroup> {
 
                     return null;
                   },
-              ),
+                ),
                 InputDecorationTextFormField(name: 'description', exampleInput: 'put your description here',
                   controller : _descriptionController,minLines: 4,initialValue: userGroup.description, validator: (value) {
                     if (value == null || value.isEmpty) {
