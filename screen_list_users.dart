@@ -1,9 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-
 import 'data.dart';
-import 'the_drawer.dart';
 import 'screen_user.dart';
 
 class ScreenListUsers extends StatefulWidget {
@@ -32,14 +29,14 @@ class _ScreenListUsersState extends State<ScreenListUsers> {
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute<void>(
               builder: (context) =>
-                  ScreenUser(userGroup : userGroup)))
+                  ScreenUser(userGroup : userGroup, user: null,)))
               .then((var v) => setState(() {}));
         },
       ),
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        title: Text("Users ${userGroup!.name}"),
+        title: Text("Users ${userGroup.name}"),
       ),
       body: ListView.separated(
         // it's like ListView.builder() but better
@@ -54,15 +51,37 @@ class _ScreenListUsersState extends State<ScreenListUsers> {
   }
 
   Widget _buildRow(User user, int index) {
-    String imagePath = Data.images[user.name.toLowerCase()]!;
-    final imageDefault = Data.images['new user'];
+    ImageProvider getImageProvider() {
+
+      // Busca si es una key de Data.images
+      final key = user.name.toLowerCase();
+      if (Data.images.containsKey(key)) {
+        String imagePath = Data.images[key]!;
+
+        // Verificar el tipo de ruta
+        if (imagePath.startsWith('http')) {
+          return NetworkImage(imagePath);
+        } else if (imagePath.startsWith('faces/')) {
+          return AssetImage(imagePath);
+        } else if (File(imagePath).existsSync()) { // Ruta de archivo local
+          return FileImage(File(imagePath));
+        }
+      }
+      return const AssetImage('faces/new_user.png');
+    }
+
     return ListTile(
-        leading: CircleAvatar(foregroundImage: imagePath.startsWith('http') ?
-        NetworkImage(imagePath) : FileImage(File(imagePath)) as ImageProvider,
-        ),
+      leading: CircleAvatar(
+        foregroundImage: getImageProvider(),
+      ),
       title: Text(user.name),
       trailing: Text(user.credential),
-      onTap: () {},
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute<void>(
+            builder: (context) =>
+                ScreenUser(userGroup: userGroup, user: userGroup.users[index],)))
+            .then((var v) => setState(() {}));
+      },
     );
   }
 }
