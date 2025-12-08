@@ -41,7 +41,7 @@ class _ScreenScheduleGroupState extends State<ScreenScheduleGroup> {
   Future<void> _selectDate(bool isFromDate) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: now,
+      initialDate: fromDate,
       firstDate: DateTime(now.year-5),
       lastDate: DateTime(now.year+5),
     );
@@ -80,7 +80,7 @@ class _ScreenScheduleGroupState extends State<ScreenScheduleGroup> {
     );
     if (pickedTime == null) return;
 
-    DateTime pickedHour = DateTime(0,0,0,pickedTime!.hour,pickedTime.minute);
+    DateTime pickedHour = DateTime(0,0,0,pickedTime.hour,pickedTime.minute);
 
     setState(() {
       if (isFromTime) {
