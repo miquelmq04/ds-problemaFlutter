@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weekday_selector/weekday_selector.dart';
-import 'the_drawer.dart';
 import 'data.dart';
 
 class ScreenScheduleGroup extends StatefulWidget {
@@ -22,7 +21,7 @@ class _ScreenScheduleGroupState extends State<ScreenScheduleGroup> {
   final DateFormat timeFormatter = DateFormat('HH:mm');
   late TimeOfDay fromTime;
   late TimeOfDay toTime;
-  late List<int> weekdays;
+  late List<bool> weekdays;
 
   @override
   void initState() {
@@ -33,7 +32,10 @@ class _ScreenScheduleGroupState extends State<ScreenScheduleGroup> {
     this.toDate = widget.userGroup.schedule.toDate;
     this.fromTime = widget.userGroup.schedule.fromTime;
     this.toTime = widget.userGroup.schedule.toTime;
-    this.weekdays = widget.userGroup.schedule.weekdays;
+    this.weekdays = List<bool>.generate(
+      7,
+          (i) => widget.userGroup.schedule.weekdays.contains(i),
+    );
   }
 
   Future<void> _selectDate(bool isFromDate) async {
@@ -43,24 +45,25 @@ class _ScreenScheduleGroupState extends State<ScreenScheduleGroup> {
       firstDate: DateTime(now.year),
       lastDate: DateTime(now.year+5),
     );
+
+    if (pickedDate == null) return;
+
     if (isFromDate) {
-      if (pickedDate!.isAfter(toDate)) {
+      if (pickedDate.isAfter(toDate)) {
         _showAlert("Range dates",
             "The From date is after the To date. Please, select a new date range");
         return;
       }
-      fromDate = pickedDate!;
+      fromDate = pickedDate;
     }
     else {
-      if (pickedDate!.isBefore(fromDate)) {
+      if (pickedDate.isBefore(fromDate)) {
         _showAlert("Range dates",
             "The To date is before the From date. Please, select a new date range");
         return;
       }
-      toDate = pickedDate!;
+      toDate = pickedDate;
     }
-
-
     setState(() {});
   }
 
@@ -75,7 +78,9 @@ class _ScreenScheduleGroupState extends State<ScreenScheduleGroup> {
         );
       },
     );
-    DateTime pickedHour = DateTime(0,0,0,pickedTime!.hour,pickedTime!.minute);
+    if (pickedTime == null) return;
+
+    DateTime pickedHour = DateTime(0,0,0,pickedTime!.hour,pickedTime.minute);
 
     setState(() {
       if (isFromTime) {
@@ -139,7 +144,7 @@ class _ScreenScheduleGroupState extends State<ScreenScheduleGroup> {
       body: Container(
         padding: EdgeInsets.fromLTRB(40, 70, 40, 0),
         child: Column(
-          spacing: 20,
+          spacing: 25,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -179,23 +184,14 @@ class _ScreenScheduleGroupState extends State<ScreenScheduleGroup> {
                     child: WeekdaySelector(
                       onChanged: (int day) {
                         setState(() {
-                          int scheduleDay = day + 1;
-                          if (weekdays.contains(scheduleDay)) {
-                            weekdays.remove(scheduleDay);
-                          } else {
-                            weekdays.add(scheduleDay);
-                          }
+                          weekdays[day % 7] = !weekdays[day % 7];
                         });
                       },
-                      values: [
-                        weekdays.contains(1),
-                        weekdays.contains(2),
-                        weekdays.contains(3),
-                        weekdays.contains(4),
-                        weekdays.contains(5),
-                        weekdays.contains(6),
-                        weekdays.contains(7),
+                      values: weekdays,
+                      shortWeekdays: const [
+                        "S", "M", "T", "W", "T", "F", "S"
                       ],
+
                     )
                 )
               ],
@@ -228,15 +224,19 @@ class _ScreenScheduleGroupState extends State<ScreenScheduleGroup> {
                 )
               ],
             ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
+            SizedBox(height: 15),
+            Center(
               child: ElevatedButton(
                 onPressed: () {
                   userGroup.schedule.fromDate = fromDate;
                   userGroup.schedule.toDate = toDate;
                   userGroup.schedule.fromTime = fromTime;
                   userGroup.schedule.toTime = toTime;
-                  userGroup.schedule.weekdays = weekdays;
+                  userGroup.schedule.weekdays = [
+                    for (int i = 0; i < 7; i++)
+                      if (weekdays[i]) i
+                  ];
+
                   ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Saved'))
                   );
