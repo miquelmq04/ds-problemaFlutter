@@ -12,6 +12,7 @@ class ScreenUser extends StatefulWidget {
 }
 
 class _ScreenUserState extends State<ScreenUser> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _credentialController = TextEditingController();
   late UserGroup userGroup;
@@ -37,6 +38,7 @@ class _ScreenUserState extends State<ScreenUser> {
           title: Text("User"),
         ),
         body: Form(
+          key: _formKey,
           child: Container(
             margin: EdgeInsetsGeometry.fromLTRB(30,50,30,0),
             child: Column(
@@ -50,17 +52,39 @@ class _ScreenUserState extends State<ScreenUser> {
                     radius: 75,
                   ),
                 ),
-                InputDecorationTextFormField(name: 'name', exampleInput: 'new user',controller : _nameController),
-                InputDecorationTextFormField(name: 'credential', exampleInput: '00000', controller : _credentialController),
+                InputDecorationTextFormField(name: 'name', exampleInput: 'new user',controller : _nameController, validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'PLease enter a name';
+                  }
+
+                  return null;
+                },
+
+                ),
+                InputDecorationTextFormField(name: 'credential', exampleInput: '00000', controller : _credentialController, validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'PLease enter a credential';
+                  }
+                  if(value.length < 5 || value.length > 5){
+                    return 'Credential must be 5 characters long';
+                  }
+                  return null;
+                }),
                 Padding(
                   padding: EdgeInsetsGeometry.fromLTRB(0,20,0,0),
-                  child: ElevatedButton(onPressed: () {
-                    String name = _nameController.text;
-                    String credential = _credentialController.text;
-                    User newUser = User(name,credential);
-                    userGroup.users.add(newUser);
-                    ScaffoldMessenger.of(context) .showSnackBar( const SnackBar(content: Text('User created')));
-                  }, child: Text("Submit")),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          String name = _nameController.text;
+                          String credential = _credentialController.text;
+                          User newUser = User(name, credential);
+                          userGroup.users.add(newUser);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('User created')));
+                          Navigator.pop(context, newUser);
+                        }
+                      },
+                  child: Text("Submit")),
                 )
               ],
             ),
