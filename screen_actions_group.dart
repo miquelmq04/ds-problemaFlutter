@@ -72,43 +72,43 @@ class _ScreenActionsGroupState extends State<ScreenActionsGroup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        title: Text("Actions for ${userGroup!.name}"),
-      ),
-      body: Column(
-        children: <Widget>[
-          CheckBoxItem(actionName: 'Open', actionDesc: 'Opens an unlocked door',
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+          title: Text("Actions for ${userGroup!.name}"),
+        ),
+        body: Column(
+          children: <Widget>[
+            CheckBoxItem(actionName: 'Open', actionDesc: 'Opens an unlocked door',
               checked: markedActions.contains('open'),onChecked: _onChecked,
               actionCode: 'open',),
-          Divider(),
-          CheckBoxItem(actionName: 'Close', actionDesc: 'Closes an open door',
+            Divider(),
+            CheckBoxItem(actionName: 'Close', actionDesc: 'Closes an open door',
               checked: markedActions.contains('close'),onChecked: _onChecked,
               actionCode: 'close',),
-          Divider(),
-          CheckBoxItem(actionName: 'Lock', actionDesc: 'Locks a door or all the doors in a rooom or group of rooms, if closed',
+            Divider(),
+            CheckBoxItem(actionName: 'Lock', actionDesc: 'Locks a door or all the doors in a rooom or group of rooms, if closed',
               checked: markedActions.contains('lock'),onChecked: _onChecked,
               actionCode: 'lock',),
-          Divider(),
-          CheckBoxItem(actionName: 'Unlock', actionDesc: 'Unlocks a locked door or all the locked doors in a room',
+            Divider(),
+            CheckBoxItem(actionName: 'Unlock', actionDesc: 'Unlocks a locked door or all the locked doors in a room',
               checked: markedActions.contains('unlock'),onChecked: _onChecked,
               actionCode: 'unlock',),
-          Divider(),
-          CheckBoxItem(actionName: 'Unlock Shortly', actionDesc: 'Unlocks a door during 10 seconds and then locks it if it is closed',
+            Divider(),
+            CheckBoxItem(actionName: 'Unlock Shortly', actionDesc: 'Unlocks a door during 10 seconds and then locks it if it is closed',
               checked: markedActions.contains('unlock_shortly'),onChecked: _onChecked,
               actionCode: 'unlock_shortly',),
-          Divider(),
-          Padding(
-            padding: EdgeInsetsGeometry.fromLTRB(0,30,0,0),
-            child: ElevatedButton(onPressed: () {
-              userGroup.actions = markedActions;
-              ScaffoldMessenger.of(context) .showSnackBar( const SnackBar(content: Text('Saved')));
-            }, child: Text("Submit")),
-          )
+            Divider(),
+            Padding(
+              padding: EdgeInsetsGeometry.fromLTRB(0,30,0,0),
+              child: ElevatedButton(onPressed: () {
+                userGroup.actions = markedActions;
+                ScaffoldMessenger.of(context) .showSnackBar( const SnackBar(content: Text('Saved')));
+              }, child: Text("Submit")),
+            )
 
-        ],
-      )
+          ],
+        )
     );
   }
 
