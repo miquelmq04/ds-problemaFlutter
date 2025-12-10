@@ -26,13 +26,13 @@ class _ScreenScheduleGroupState extends State<ScreenScheduleGroup> {
   @override
   void initState() {
     super.initState();
-    this.userGroup = widget.userGroup;
-    this.now = DateTime.now();
-    this.fromDate = widget.userGroup.schedule.fromDate;
-    this.toDate = widget.userGroup.schedule.toDate;
-    this.fromTime = widget.userGroup.schedule.fromTime;
-    this.toTime = widget.userGroup.schedule.toTime;
-    this.weekdays = List<bool>.generate(
+    userGroup = widget.userGroup;
+    now = DateTime.now();
+    fromDate = widget.userGroup.schedule.fromDate;
+    toDate = widget.userGroup.schedule.toDate;
+    fromTime = widget.userGroup.schedule.fromTime;
+    toTime = widget.userGroup.schedule.toTime;
+    weekdays = List<bool>.generate(
       7,
           (i) => widget.userGroup.schedule.weekdays.contains(i),
     );
@@ -41,7 +41,7 @@ class _ScreenScheduleGroupState extends State<ScreenScheduleGroup> {
   Future<void> _selectDate(bool isFromDate) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: fromDate,
+      initialDate: isFromDate ? fromDate: toDate,
       firstDate: DateTime(now.year-5),
       lastDate: DateTime(now.year+5),
     );
