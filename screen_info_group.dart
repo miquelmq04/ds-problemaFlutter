@@ -53,17 +53,22 @@ class _ScreenInfoGroupState extends State<ScreenInfoGroup> {
                       return 'Please enter a group name';
                     }
 
+                    final RegExp regex = RegExp(r'[a-zA-Z ]$');
+                    if (!regex.hasMatch(value)) {
+                      return 'Group name can only contain letters and spaces';
+                    }
+
                     return null;
                   },
                 ),
                 InputDecorationTextFormField(name: 'description', exampleInput: 'put your description here',
-                  controller : _descriptionController,minLines: 4,initialValue: userGroup.description, validator: (value) {
+                  controller : _descriptionController,minLines: 4,initialValue: userGroup.description,
+                  validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a description';
                     }
 
                     return null;
-
                   },
                 ),
                 Padding(
