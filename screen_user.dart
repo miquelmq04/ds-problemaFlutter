@@ -164,6 +164,11 @@ class _ScreenUserState extends State<ScreenUser> {
                       return 'PLease enter a name';
                     }
 
+                    final RegExp regex = RegExp(r'[a-zA-ZñÑáéíóúÁÉÍÓÚàèìòùÀÈÌÒÙüÜïÏ ]$');
+                    if (!regex.hasMatch(value)) {
+                      return 'Name can only contain letters and spaces';
+                    }
+
                     return null;
                   },
                 ),
@@ -177,6 +182,23 @@ class _ScreenUserState extends State<ScreenUser> {
                     if(value.length < 5 || value.length > 5){
                       return 'Credential must be 5 characters long';
                     }
+
+                    final RegExp regex = RegExp(r'[0-9]$');
+                    if (!regex.hasMatch(value)) {
+                      return 'Credential can only contain numbers';
+                    }
+
+                    for (UserGroup group in Data.userGroups){
+                      for(User user in group.users){
+                        if(!isNewUser && user == this.user){
+                          continue;
+                        }
+                        if(value == user.credential){
+                          return 'Credential already in use';
+                        }
+                      }
+                    }
+
                     return null;
                   }
                 ),
